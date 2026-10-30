@@ -8,12 +8,33 @@
     "powershell": "7.6.9"
   },
   "knownEnvironmentFailures": [
-    "DnsClientX.Tests.AuditTrailTests.ShouldRecordResponseWhenEnabled",
-    "DnsClientX.Tests.CliIntegrationTests.CliRunsWithoutLeavingSockets",
-    "DnsClientX.Tests.CliIntegrationTests.TypeOption_IsCaseInsensitive(option: \"--type\")",
-    "DnsClientX.Tests.CliIntegrationTests.TypeOption_IsCaseInsensitive(option: \"--TYPE\")",
-    "DnsClientX.Tests.CliIntegrationTests.WirePostOption_Executes",
-    "DnsClientX.Tests.CliIntegrationTests.Cli_DisplaysRetryCount",
-    "DnsClientX.Tests.DnsWireResolveUdpIPv6Tests.ResolveWireFormatUdp_ShouldReturnServerFailure_ForInvalidServer"
+    {
+      "testId": "4b18e9fa-9ba1-58a0-d486-56ff15c62173",
+      "testName": "DnsClientX.Tests.AuditTrailTests.ShouldRecordResponseWhenEnabled"
+    },
+    {
+      "testId": "b13a81fc-5243-041c-67e8-44942f2cda54",
+      "testName": "DnsClientX.Tests.CliIntegrationTests.CliRunsWithoutLeavingSockets"
+    },
+    {
+      "testId": "27255b5e-73e2-04c0-82db-cf1f62d2e15c",
+      "testName": "DnsClientX.Tests.CliIntegrationTests.TypeOption_IsCaseInsensitive(option: \"--type\")"
+    },
+    {
+      "testId": "5df0ed6b-c1d6-76df-06f2-106af592e0d1",
+      "testName": "DnsClientX.Tests.CliIntegrationTests.TypeOption_IsCaseInsensitive(option: \"--TYPE\")"
+    },
+    {
+      "testId": "0b2ca754-03ef-1002-a62f-57a55b3d9eb0",
+      "testName": "DnsClientX.Tests.CliIntegrationTests.WirePostOption_Executes"
+    },
+    {
+      "testId": "b41aa51e-e9f2-d187-1ac8-7e8f3dd5f497",
+      "testName": "DnsClientX.Tests.CliIntegrationTests.Cli_DisplaysRetryCount"
+    },
+    {
+      "testId": "d219d873-0ed2-d409-c60d-292d16ff56b1",
+      "testName": "DnsClientX.Tests.DnsWireResolveUdpIPv6Tests.ResolveWireFormatUdp_ShouldReturnServerFailure_ForInvalidServer"
+    }
   ]
 }

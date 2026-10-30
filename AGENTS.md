@@ -6,5 +6,6 @@
 - Keep SDK, PowerShell, NuGet cache, logs, and upstream checkout outside this repository where practical.
 - Do not commit build outputs, package caches, test results, logs, or upstream sources.
 - Do not run public DNS updates, AXFR scans, or load/benchmark tests as routine environment checks.
-- Report full-suite and environment-limited test outcomes separately, including every excluded test name.
+- Run the complete suite without `dotnet test --filter`; classify results afterward by exact TRX `testId` and `testName`.
+- Report full-suite and environment-comparable outcomes separately. Exclude only exact known failure identities that actually failed, list recovered or skipped known cases, and fail on every new failure.
 - Do not commit or push unless explicitly requested for the current task.
