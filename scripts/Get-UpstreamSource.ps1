@@ -9,6 +9,14 @@ $config = Get-Content -Raw -LiteralPath (Join-Path $RepositoryRoot 'config/upstr
 $workspace = if ($env:CODEX_WORKSPACE) { $env:CODEX_WORKSPACE } else { Split-Path -Parent $RepositoryRoot }
 if (-not $Destination) { $Destination = Join-Path $workspace $config.installRootName }
 
+$repositoryPath = [IO.Path]::GetFullPath($RepositoryRoot).TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)
+$destinationPath = [IO.Path]::GetFullPath($Destination).TrimEnd([IO.Path]::DirectorySeparatorChar, [IO.Path]::AltDirectorySeparatorChar)
+$pathComparison = if ($IsWindows) { [StringComparison]::OrdinalIgnoreCase } else { [StringComparison]::Ordinal }
+$repositoryPrefix = "$repositoryPath$([IO.Path]::DirectorySeparatorChar)"
+if ($destinationPath.Equals($repositoryPath, $pathComparison) -or $destinationPath.StartsWith($repositoryPrefix, $pathComparison)) {
+    throw "Upstream source destination must be outside the review repository: $destinationPath"
+}
+
 if (-not (Test-Path -LiteralPath (Join-Path $Destination '.git'))) {
     & git clone --no-checkout $config.repository $Destination
     if ($LASTEXITCODE -ne 0) { throw "git clone failed: $LASTEXITCODE" }

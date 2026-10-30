@@ -8,4 +8,5 @@
 - Do not run public DNS updates, AXFR scans, or load/benchmark tests as routine environment checks.
 - Run the complete suite without `dotnet test --filter`; classify results afterward by exact TRX `testId` and `testName`.
 - Report full-suite and environment-comparable outcomes separately. Exclude only exact known failure identities that actually failed, list recovered or skipped known cases, and fail on every new failure.
+- The .NET Linux tar.gz installation path has been exercised. The Windows ZIP extraction path has not been executed on Windows and must remain marked unverified.
 - Do not commit or push unless explicitly requested for the current task.
