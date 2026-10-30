@@ -1,0 +1,19 @@
+{
+  "repository": "https://github.com/EvotecIT/DnsClientX.git",
+  "tag": "DnsClientX-v2.1.2",
+  "commit": "1cfb438fd4c75a8ae54d457fb3073ab4aeb3718a",
+  "installRootName": "DnsClientX-upstream",
+  "toolchain": {
+    "dotnetSdks": ["8.0.427", "10.0.403"],
+    "powershell": "7.6.9"
+  },
+  "knownEnvironmentFailures": [
+    "DnsClientX.Tests.AuditTrailTests.ShouldRecordResponseWhenEnabled",
+    "DnsClientX.Tests.CliIntegrationTests.CliRunsWithoutLeavingSockets",
+    "DnsClientX.Tests.CliIntegrationTests.TypeOption_IsCaseInsensitive(option: \"--type\")",
+    "DnsClientX.Tests.CliIntegrationTests.TypeOption_IsCaseInsensitive(option: \"--TYPE\")",
+    "DnsClientX.Tests.CliIntegrationTests.WirePostOption_Executes",
+    "DnsClientX.Tests.CliIntegrationTests.Cli_DisplaysRetryCount",
+    "DnsClientX.Tests.DnsWireResolveUdpIPv6Tests.ResolveWireFormatUdp_ShouldReturnServerFailure_ForInvalidServer"
+  ]
+}
