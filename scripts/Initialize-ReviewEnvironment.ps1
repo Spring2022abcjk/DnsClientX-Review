@@ -20,6 +20,18 @@ $dotnetRoot = if ($env:DOTNET_ROOT) { $env:DOTNET_ROOT } else { Join-Path $toolR
 $cliHome = Join-Path $toolRoot 'cli-home'
 $nugetPackages = Join-Path $toolRoot 'nuget/packages'
 $tempRoot = Join-Path $toolRoot 'tmp'
+$dotnetInstallParent = Split-Path -Parent $dotnetRoot
+if ([string]::IsNullOrWhiteSpace($dotnetInstallParent)) { throw "Could not resolve parent directory for DOTNET_ROOT: $dotnetRoot" }
+[void][IO.Directory]::CreateDirectory($dotnetInstallParent)
+if (-not (Test-Path -LiteralPath $dotnetRoot)) {
+    $dotnetLeaf = Split-Path -Leaf $dotnetRoot
+    $orphanBackups = @(Get-ChildItem -LiteralPath $dotnetInstallParent -Directory -Filter "$dotnetLeaf.backup-*" -ErrorAction Stop)
+    if ($orphanBackups.Count -gt 1) { throw "Multiple orphaned .NET installation backups found under $dotnetInstallParent; preserving them for manual recovery" }
+    if ($orphanBackups.Count -eq 1) {
+        [IO.Directory]::Move($orphanBackups[0].FullName, $dotnetRoot)
+        Write-Warning "Recovered .NET installation root from interrupted transaction backup $($orphanBackups[0].Name)"
+    }
+}
 foreach ($path in @($toolRoot, $cliHome, $nugetPackages, $tempRoot, $dotnetRoot)) {
     [void][IO.Directory]::CreateDirectory($path)
     $probe = Join-Path $path ([guid]::NewGuid().ToString('N'))
