@@ -4,14 +4,55 @@ set -eu
 VERSION=7.6.9
 ARCHIVE="powershell-${VERSION}-linux-x64.tar.gz"
 EXPECTED_SHA256=1da6d6d6035d651f20e70ddee7c4c15ac6ab8b9fb40ee92240d91263f28a884b
+
+if [ -d /workspace ] && [ -w /workspace ]; then
+    WORKSPACE_ROOT=/workspace
+elif [ -n "${CODEX_WORKSPACE:-}" ] && [ -d "$CODEX_WORKSPACE" ] && [ -w "$CODEX_WORKSPACE" ]; then
+    WORKSPACE_ROOT=$CODEX_WORKSPACE
+else
+    echo 'A writable /workspace or CODEX_WORKSPACE directory is required for the PowerShell runtime.' >&2
+    exit 1
+fi
+
 if [ -n "${POWERSHELL_INSTALL_ROOT:-}" ]; then
     INSTALL_ROOT=$POWERSHELL_INSTALL_ROOT
-elif [ -d /workspace ] && [ -w /workspace ]; then
-    INSTALL_ROOT=/workspace/.powershell
 else
-    INSTALL_ROOT="${HOME:?}/.local/share/powershell"
+    INSTALL_ROOT="$WORKSPACE_ROOT/.powershell"
 fi
 INSTALL_DIR="$INSTALL_ROOT/$VERSION"
+RUNTIME_HOME="$WORKSPACE_ROOT/.review-tools/cli-home"
+XDG_CACHE_HOME="$RUNTIME_HOME/.cache"
+XDG_CONFIG_HOME="$RUNTIME_HOME/.config"
+XDG_DATA_HOME="$RUNTIME_HOME/.local/share"
+TMPDIR="$WORKSPACE_ROOT/.review-tools/tmp"
+TEMP=$TMPDIR
+TMP=$TMPDIR
+DOTNET_ROOT=${DOTNET_ROOT:-"$WORKSPACE_ROOT/.review-tools/dotnet"}
+
+command -v mktemp >/dev/null 2>&1 || { echo 'mktemp is required for writable-directory checks' >&2; exit 1; }
+umask 077
+ensure_writable_dir() {
+    directory=$1
+    if ! mkdir -p "$directory"; then
+        echo "Could not create required runtime directory: $directory" >&2
+        exit 1
+    fi
+    if ! probe=$(mktemp "$directory/.codex-bootstrap-write-check.XXXXXX"); then
+        echo "Required runtime directory is not writable: $directory" >&2
+        exit 1
+    fi
+    if ! rm -f "$probe"; then
+        echo "Could not remove runtime write-check file: $probe" >&2
+        exit 1
+    fi
+}
+
+for directory in "$RUNTIME_HOME" "$XDG_CACHE_HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$TMPDIR" "$INSTALL_ROOT"; do
+    ensure_writable_dir "$directory"
+done
+
+PATH="$INSTALL_DIR:$DOTNET_ROOT:$PATH"
+export HOME="$RUNTIME_HOME" XDG_CACHE_HOME XDG_CONFIG_HOME XDG_DATA_HOME TMPDIR TEMP TMP DOTNET_ROOT PATH
 
 if [ "$(uname -s)" != Linux ] || [ "$(uname -m)" != x86_64 ]; then
     echo 'This minimal bootstrap currently supports Linux x86_64; install the pinned PowerShell release for this platform separately.' >&2
